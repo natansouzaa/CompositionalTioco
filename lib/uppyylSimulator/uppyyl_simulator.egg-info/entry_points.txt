@@ -1,0 +1,4 @@
+[console_scripts]
+uppyyl-simulator = uppyyl_simulator.uppyyl_simulator:main
+uppyyl_simulator = uppyyl_simulator.uppyyl_simulator:main
+
