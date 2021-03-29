@@ -1,0 +1,178 @@
+system GarageSystem;
+
+clocks
+	clockR, clockG;
+
+gate
+	InitR;
+	remoteControlSelected(int, int);
+	pressAndHold(int);
+	press(int);
+	initDriver;
+	select(int);
+	store(int);
+	move(int);
+	trackEnd(int);
+	closeDoor(int);
+	trackBegin(int);
+	motorStop(int);
+
+// Specification of RemoteControl process
+process RemoteControl;
+
+input
+	remoteControlSelected;
+
+output
+	pressAndHold, press;
+
+internal
+	InitR;
+
+variables
+	frequency: int;
+	choice: int;
+
+state
+	init : STARTR;
+	S1;
+	S2;
+
+transition
+
+	from STARTR
+		if (TRUE)	
+		sync InitR()
+		deadline lazy
+	to S1;
+	from S1
+		if (TRUE)			
+		sync remoteControlSelected?(op, freq)
+		do { choice := op |
+		     frequency := freq |
+		     clockR := 0
+		}
+		deadline lazy
+	to S2;
+	from S2
+		when clockR <= 2
+		if (choice = button)			
+		sync press!(button)
+		deadline lazy
+	to S1;
+	from S2
+		when clockR > 2
+		if (choice = button AND frequency = freq)			
+		sync pressAndHold!(freq)
+		do frequency := freq
+		deadline lazy
+	to S1;
+	
+// Specification of GarageDoorController process
+process GarageDoorController;
+
+input
+	initDriver, select, pressAndHold, press, trackEnd, trackBegin;
+
+output
+	store, move, closeDoor, motorStop;
+
+variables
+	frequency: int;
+	position: int;
+	option: int;
+
+state
+	init : STARTG;
+	S3;
+	S4;
+	S5;
+	S6;
+	S7;
+	S8;
+	S9;
+
+transition
+
+	from STARTG
+		if (TRUE)	
+		sync initDriver?()
+		deadline lazy
+	to S3;
+	from S3
+		if (TRUE)			
+		sync select?(op)
+		do { option := op |
+		     clockG := 0
+		}
+		deadline lazy
+	to S4;
+	from S4
+		if (TRUE)			
+		sync press?(button)
+		do position := button
+		deadline lazy
+	to S5;
+	from S4
+		if (option = program)			
+		sync pressAndHold?(freq)
+		do frequency := freq
+		deadline lazy
+	to S9;
+	from S5
+		if (option = open AND position = pos)			
+		sync move!(position)
+		deadline lazy
+	to S6;
+	from S5
+		if (option = close AND position = pos)			
+		sync closeDoor!(pos)
+		deadline lazy
+	to S8;
+	from S6
+		when clockG <= 10			
+		sync trackEnd?(pos)
+		do position := pos
+		deadline lazy
+	to S7;
+	from S7
+		if (position = pos)			
+		sync motorStop!(pos)
+		deadline lazy
+	to S3;
+	from S8
+		when clockG <= 10			
+		sync trackBegin?(pos)
+		do position := pos
+		deadline lazy
+	to S7;
+	from S9
+		if (frequency = freq)			
+		sync store!(freq)
+		deadline lazy
+	to S3;
+
+process GarageSystemTP1;
+
+input
+	select;
+	
+output
+	press;
+
+state
+	init : START;
+	S10;
+	Accept;
+
+transition
+	from START
+		if (TRUE)
+		sync select?(op)
+		deadline lazy
+	to S10;
+	from S10
+		if (TRUE)
+		sync press!(button)
+		deadline lazy
+	to Accept;

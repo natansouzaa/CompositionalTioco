@@ -103,17 +103,9 @@ public class RenamingOperator {
 			}			
 		}
 		
-		/*  NATAN: Basicamente o que ele faz nesse método abaixo é gerar um novo modelo, porem com todas as
-			mudanças necesárias entre as ações a e b.
-		*/
-		
 		result = initialize(tiosts1, a, b);
 
-		//Building the new set of transitions
-		
-		/*  NATAN: Adiciona as transações ao modelo result, com todas as informações necessárias tiradas do tiosts1.
-		*/
-		
+		//Building the new set of transitions	
 		for(Transition t:tiosts1.getTransitions()){		
 			Action action = t.getAction();
 			if (!action.equals(a)){

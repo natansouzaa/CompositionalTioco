@@ -221,6 +221,8 @@ public class Transition {
 			return this.dataGuard;
 		} else if (this.dataGuard.equals(Constants.GUARD_TRUE)){
 			return clockGuardString;
+		} else if (this.dataGuard.equals(clockGuardString)) {
+			return clockGuardString;
 		} else {
 			return this.dataGuard + " " + Constants.GUARD_CONJUNCTION + " " + clockGuardString;
 		}

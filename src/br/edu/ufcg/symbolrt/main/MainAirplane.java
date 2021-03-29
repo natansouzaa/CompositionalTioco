@@ -80,7 +80,7 @@ public class MainAirplane {
 			e.printStackTrace();
 		}		
 		
-		//Alteracoes Hiding e Renaming
+		//Changes Hiding and Renaming
 		
 		TIOSTS tiostsRenTT = null;		
 		
@@ -96,10 +96,10 @@ public class MainAirplane {
 		SYMBOLRT symbolrt = SYMBOLRT.getInstance();
 		List<TIOSTS> testCases = symbolrt.generateTestCases(tiostsPar, testPurpose, true);
 		
-		//alterados
+		//Changes
 		testCases.add(tiostsRenTT);
 		
-		//adicionais
+		//Additional
 		testCases.add(tiostsTD);
 		testCases.add(tiostsTT);
 		testCases.add(tiostsRadar);

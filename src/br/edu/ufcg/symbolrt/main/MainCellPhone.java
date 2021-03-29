@@ -53,7 +53,6 @@ import br.edu.ufcg.symbolrt.facade.SYMBOLRT;
 public class MainCellPhone {
 
 	public static void main(String[] args) {
-		//Estudo de caso do Avião
 		
 		long start = System.currentTimeMillis();
 		
@@ -91,7 +90,7 @@ public class MainCellPhone {
 			e.printStackTrace();
 		}
 		
-		//Alteracoes Hiding e Renaming
+		//Changes Hiding and Renaming
 		TIOSTS tiostsHidContactsApp = null;
 		
 		HidingOperator hidOperator = HidingOperator.getInstance();
@@ -116,7 +115,7 @@ public class MainCellPhone {
 		SYMBOLRT symbolrt = SYMBOLRT.getInstance();
 		List<TIOSTS> testCases = symbolrt.generateTestCases(tiostsCellPhone, testPurpose, true);
 		
-		//alterados
+		//Changes
 		testCases.add(tiostsHidContactsApp);
 		testCases.add(tiostsRenMessageApp);
 		

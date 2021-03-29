@@ -56,7 +56,6 @@ public class MainInputCompletion {
 		
 		long start = System.currentTimeMillis();
 		
-		
 		Compiler.compile("./examples/ChoosePay.srt", "Choose");
 		TIOSTS tiostsChoose = Compiler.getSpecification("Choose");	
 		TIOSTS tiostsPay = Compiler.getSpecification("Pay");

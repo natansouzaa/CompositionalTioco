@@ -54,7 +54,6 @@ import br.edu.ufcg.symbolrt.facade.SYMBOLRT;
 public class MainInterruptionMouse {
 
 	public static void main(String[] args) {
-		//Estudo de caso do Avião
 		
 		long start = System.currentTimeMillis();
 		

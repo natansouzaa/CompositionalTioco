@@ -167,7 +167,7 @@ public class GraphVisualization {
 		param.setCompressedText(new String[] { "mxGraphModel", xml });
 
 		// Saves as a PNG file
-		FileOutputStream outputStream = new FileOutputStream(new File(fileName+".png"));
+		FileOutputStream outputStream = new FileOutputStream(new File(Config.getInstance().testCasesPath + fileName+".png"));
 		mxPngImageEncoder encoder = new mxPngImageEncoder(outputStream, param);
 
 		if (image != null) {

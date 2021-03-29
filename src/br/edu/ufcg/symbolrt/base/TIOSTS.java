@@ -676,7 +676,6 @@ public class TIOSTS {
 	public void createTransition(String sourceLocation, String dataGuard, ClockGuard clockGuard, Action action, String dataAssignments, String clockAssignments, String targetLocation) {
 		Location source = this.locations.get(sourceLocation);
 		Location target = this.locations.get(targetLocation);
-		
 		// Updates the initial condition considering that there is only one outgoing transition from the initial location
 		if (source.isInitialLocation()){
 			this.initialCondition = dataGuard;
@@ -736,7 +735,6 @@ public class TIOSTS {
 		
 		source.addOutTransition(transition);
 		target.addInTransition(transition);
-		
 		this.transitions.put(transition.getKey(), transition);
 	}
 

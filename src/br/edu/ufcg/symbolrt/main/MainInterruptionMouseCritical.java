@@ -55,7 +55,6 @@ import br.edu.ufcg.symbolrt.util.Constants;
 public class MainInterruptionMouseCritical {
 
 	public static void main(String[] args) {
-		//Estudo de caso do Avião
 		
 		long start = System.currentTimeMillis();
 		

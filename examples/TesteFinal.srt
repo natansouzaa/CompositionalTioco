@@ -1,0 +1,152 @@
+system TesteFinal;
+
+clocks
+	clockR, clockG;
+
+gate
+	InitR;
+	InitDriver;
+	RemoteControlSelected(int, int);
+	PressAndHold(int);
+	Press(int);
+	Select(int);
+	Store(int);
+	OpenDoor;
+	TrackEnd;
+	CloseDoor;
+	TrackBegin;
+	MotorStop;
+
+// Specification of RemoteControl process
+process RemoteControl;
+
+input
+	RemoteControlSelected;
+
+output
+	PressAndHold, Press;
+
+internal
+	InitR;
+
+variables
+	frequency:int;
+	choice: int;
+
+state
+	init : STARTR;
+	S1;
+	S2;
+
+transition
+	from STARTR
+		if (TRUE)
+		sync InitR()
+		deadline lazy
+	to S1;
+	from S1
+		if (TRUE)			
+		sync RemoteControlSelected?(op, freq)
+		do { choice := op |
+		     frequency := freq |
+		     clockR := 0
+		}
+		deadline lazy
+	to S2;
+	from S2
+		when clockR <= 2
+		if (choice = button)			
+		sync Press!(button)
+		deadline lazy
+	to S1;
+	from S2	
+		when clockR > 2
+		if (choice = button AND frequency = freq)			
+		sync PressAndHold!(freq)
+		do frequency := freq
+		deadline lazy
+	to S1;
+
+// Specification of GarageDoorController process
+process GarageDoorController;
+
+input
+	Select, PressAndHold, Press, TrackEnd, TrackBegin, MotorStop;	
+
+output
+	Store, OpenDoor, CloseDoor;
+	
+internal
+	InitDriver;
+
+variables
+	frequency:int;
+	choice:int;
+	option: int;
+
+state
+	init : STARTG;
+	S3;
+	S4;
+	S5;
+	S6;
+	S7;
+	S8;
+	S9;
+
+transition
+	from STARTG
+		if (TRUE)	
+		sync InitDriver()
+		deadline lazy
+	to S3;
+	from S3
+		if (TRUE)			
+		sync Select?(op)
+		do { option := op |
+		     clockG := 0
+		}
+		deadline lazy
+	to S4;
+	from S4
+		if (TRUE)			
+		sync Press?(button)
+		do choice := button
+		deadline lazy
+	to S5;
+	from S4
+		if (option = program)			
+		sync PressAndHold?(freq)
+		do frequency := freq
+		deadline lazy
+	to S9;
+	from S5
+		if (option = open)			
+		sync OpenDoor!()
+		deadline lazy
+	to S6;
+	from S5
+		if (option = close)			
+		sync CloseDoor!()
+		deadline lazy
+	to S8;
+	from S6
+		when clockG <= 10			
+		sync TrackEnd?()
+		deadline lazy
+	to S7;
+	from S7
+		if (TRUE)			
+		sync MotorStop?()
+		deadline lazy
+	to S3;
+	from S8
+		when clockG <= 10			
+		sync TrackBegin?()
+		deadline lazy
+	to S7;
+	from S9
+		if (frequency = freq)			
+		sync Store!(freq)
+		deadline lazy
+	to S3;
