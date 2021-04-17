@@ -25,7 +25,7 @@ public class EdgeInsert extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -934272115736416043L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create the frame.

@@ -32,7 +32,6 @@ public class EdgeEdit extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * @param cell 
 	 */
 	public EdgeEdit(MyTIOSTS tiosts, mxCell cell) {
 		setTitle("Edit Edge");

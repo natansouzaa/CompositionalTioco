@@ -9,7 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import gui.screens.Main;
+import gui.screens.GraphEditor;
+import gui.screens.Upload;
 
 public class App {
 
@@ -56,14 +57,22 @@ public class App {
 		btnNewButton.setBounds(155, 100, 140, 25);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Main procedimento = new Main();
-				procedimento.setVisible(true);
+				new GraphEditor();
 				frame.dispose();
 			}
 		});
 		contentPane.setLayout(null);
 		contentPane.add(btnNewButton);
 		
+		JButton btnNewButton_1 = new JButton("Upload SRT");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Upload();
+				frame.dispose();
+			}
+		});
+		btnNewButton_1.setBounds(155, 137, 140, 25);
+		contentPane.add(btnNewButton_1);
+		
 	}
-
 }

@@ -26,7 +26,6 @@ public class VertexEdit extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * @param cell 
 	 */
 	public VertexEdit(MyTIOSTS tiosts, mxCell cell) {
 		setTitle("Edit Vertex");
