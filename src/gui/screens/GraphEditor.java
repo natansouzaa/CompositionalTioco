@@ -26,8 +26,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JSplitPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
@@ -39,6 +37,7 @@ import javax.swing.tree.TreeSelectionModel;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 
+import gui.examples.CellPhoneApp;
 import gui.types.MyTIOSTS;
 import gui.util.IconNode;
 import gui.util.GenerateSRT;
@@ -61,16 +60,43 @@ public class GraphEditor extends JFrame {
 	private JPanel contentPane;
 	private JButton[] buttonArray;
 	private JTextPane textEditor = new JTextPane();
+	
+	private JPanel panel_1;
 
 	private String systemName = "";
 	private MyTIOSTS selected;
 	private HashMap<DefaultMutableTreeNode, MyTIOSTS> treeTIOSTS = new HashMap<DefaultMutableTreeNode, MyTIOSTS>();
 	
+	
+	public JPanel getPanel_1() {
+		return panel_1;
+	}
+
+	public void setPanel_1(JPanel panel_1) {
+		this.panel_1 = panel_1;
+	}
+
 	public void repaintTree() {
 		tree.repaint();
 		tree.revalidate();
 	}
 	
+	public JTree getTree() {
+		return tree;
+	}
+
+	public void setTree(JTree tree) {
+		this.tree = tree;
+	}
+
+	public HashMap<DefaultMutableTreeNode, MyTIOSTS> getTreeTIOSTS() {
+		return treeTIOSTS;
+	}
+
+	public void setTreeTIOSTS(HashMap<DefaultMutableTreeNode, MyTIOSTS> treeTIOSTS) {
+		this.treeTIOSTS = treeTIOSTS;
+	}
+
 	public MyTIOSTS getSelected() {
 		return selected;
 	}
@@ -115,21 +141,16 @@ public class GraphEditor extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		splitPane.setLeftComponent(scrollPane);
 		
-		// tabbedPane
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		splitPane.setRightComponent(tabbedPane);
-			
-		JPanel panel_1 = new JPanel();
-//		tabbedPane.addTab("TIOSTS", null, panel_1, null);
+		panel_1 = new JPanel();
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		tabbedPane.addTab("TIOSTS", null, scrollPane_1, null);
+		splitPane.setRightComponent(scrollPane_1);
 		scrollPane_1.setViewportView(panel_1);
 		
 		// tree
 		setSystemName("TIOSTS");
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new IconNode(getSystemName(), "/gui/icons/tab.png"));
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new IconNode(getSystemName(), "/gui/src/icons/max_folder.png"));
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new SimpleNode("System Declarations"));
 
 		root.add(node);
@@ -148,7 +169,6 @@ public class GraphEditor extends JFrame {
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
 				int cont = tree.getSelectionModel().getLeadSelectionRow();
-				tabbedPane.setSelectedIndex(0);
 				panel_1.removeAll();
 				panel_1.repaint();
 				panel_1.revalidate();
@@ -184,17 +204,97 @@ public class GraphEditor extends JFrame {
 		JMenu menu1 = new JMenu("File");
 		menuBar.add(menu1);
 			
+		JMenu menu3 = new JMenu("Edit");
+		menuBar.add(menu3);
+		
 		JMenu menu2 = new JMenu("Examples");
 		menuBar.add(menu2);
-
-		JMenuItem itemMenu1 = new JMenuItem("Add TIOSTS");
-		itemMenu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/icons/graph.png")));
-		itemMenu1.addActionListener(new ActionListener() {
+		
+		JMenu menu4 = new JMenu("Help");
+		menuBar.add(menu4);
+		
+		JMenuItem item3Menu1 = new JMenuItem("New Project");
+		item3Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/max_newProject.png")));
+		item3Menu1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new GraphEditor();
+				dispose();
+			}
+		});
+		menu1.add(item3Menu1);
+		
+		JMenuItem item1Menu1 = new JMenuItem("Add TIOSTS");
+		item1Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/max_add.png")));
+		item1Menu1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				insertNode(null, null);
 			}
 		});
-		menu1.add(itemMenu1);
+		menu3.add(item1Menu1);
+		
+		JMenuItem item2Menu1 = new JMenuItem("Remove TIOSTS");
+		item2Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/remove.png")));
+		item2Menu1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int cont = tree.getSelectionModel().getLeadSelectionRow();
+				DefaultTreeModel model1 = (DefaultTreeModel) getTree().getModel();
+				DefaultMutableTreeNode root1 = (DefaultMutableTreeNode) model1.getRoot();
+
+				if(cont<0) {
+					JOptionPane.showMessageDialog(null, "Select a TIOSTS to remove.", "Warning" , JOptionPane.WARNING_MESSAGE);
+				}else if (cont<=1){
+					JOptionPane.showMessageDialog(null, "Only removal of child nodes is allowed.", "Warning" , JOptionPane.WARNING_MESSAGE);
+				} else {
+					DefaultMutableTreeNode ab = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+					DefaultMutableTreeNode parentAab = (DefaultMutableTreeNode) ((DefaultMutableTreeNode) tree.getLastSelectedPathComponent()).getParent();
+					if(treeTIOSTS.containsKey(ab)) {
+						treeTIOSTS.remove(ab);
+						model1.removeNodeFromParent(ab);
+					}
+					else if(treeTIOSTS.containsKey(parentAab)){
+						JOptionPane.showMessageDialog(null, "Cannot remove local declarations.", "Warning" , JOptionPane.WARNING_MESSAGE);
+					}
+					model1.reload(root1);		
+				}
+			}
+		});
+		menu3.add(item2Menu1);
+		
+		JMenuItem item5Menu1 = new JMenuItem("Export TIOSTS");
+		item5Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/max_save.png")));
+		item5Menu1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				showSaveFileDialog();
+			}
+		});
+		menu1.add(item5Menu1);
+		
+		JMenuItem item1Menu2 = new JMenuItem("CellPhoneApp");
+		item1Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/Help.png")));
+		item1Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new CellPhoneApp(GraphEditor.this).main();
+			}
+		});
+		menu2.add(item1Menu2);
+		
+		JMenuItem item1Menu4 = new JMenuItem("Help");
+		item1Menu4.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/Help.png")));
+		item1Menu4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//
+			}
+		});
+		menu4.add(item1Menu4);
+		
+		JMenuItem item4Menu1 = new JMenuItem("Exit");
+		item4Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/max_exit.png")));
+		item4Menu1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
+		menu1.add(item4Menu1);
 		
 		// buttons
 		buttonArray = new JButton[4];
@@ -212,7 +312,7 @@ public class GraphEditor extends JFrame {
 			}
 		});
 		toolBar.add(buttonArray[0]);
-		buttonArray[0].setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/icons/Add-icon.png")));
+		buttonArray[0].setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/vertex.png")));
 			
 		buttonArray[1] = new JButton("");
 		buttonArray[1].addActionListener(new ActionListener() {
@@ -222,7 +322,7 @@ public class GraphEditor extends JFrame {
 			}
 		});
 		toolBar.add(buttonArray[1]);
-		buttonArray[1].setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/icons/right.png")));
+		buttonArray[1].setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/Edge.png")));
 		
 		buttonArray[2] = new JButton("");
 		buttonArray[2].addActionListener(new ActionListener() {
@@ -231,18 +331,17 @@ public class GraphEditor extends JFrame {
 			}
 		});
 		toolBar.add(buttonArray[2]);
-		buttonArray[2].setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/icons/printer.png")));
+		buttonArray[2].setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/max_save.png")));
 		
 		buttonArray[3] = new JButton("");
 		buttonArray[3].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mxHierarchicalLayout layout = new mxHierarchicalLayout(selected.getGraph());
-			    layout.setOrientation(SwingConstants.WEST);
 			    layout.execute(selected.getGraph().getDefaultParent());
 			}
 		});
 		toolBar.add(buttonArray[3]);
-		buttonArray[3].setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/icons/organize.png")));
+		buttonArray[3].setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/Organize.png")));
 		statusButton(false);
 		addKeysEvent();
 		
@@ -264,7 +363,7 @@ public class GraphEditor extends JFrame {
 			}
 		});
 		toolBar2.add(runComposition);
-		runComposition.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/icons/play-24.png")));
+		runComposition.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/GenerateTestCases.png")));
 		runComposition.setToolTipText("Play");
 	}	
 
@@ -287,7 +386,7 @@ public class GraphEditor extends JFrame {
 			}
 		});
 	}
-	
+		
 	private void addKeysEvent() {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 		  .addKeyEventDispatcher(new KeyEventDispatcher() {
@@ -310,7 +409,7 @@ public class GraphEditor extends JFrame {
 		if(name == null) {
 			name = "new TIOSTS";
 		}
-		IconNode node1 = new IconNode(name, "/gui/icons/graph.png");
+		IconNode node1 = new IconNode(name, "/gui/src/icons/TIOSTS.png");
 		SimpleNode node2 = new SimpleNode("Local Declarations");
 		
 		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
@@ -324,7 +423,7 @@ public class GraphEditor extends JFrame {
 		
 		model.reload(root);		
 		if(newTIOSTS==null) {
-			MyTIOSTS novo = new MyTIOSTS("new TIOSTS");
+			MyTIOSTS novo = new MyTIOSTS(name);
 			treeTIOSTS.put(schema, novo);
 		}else {
 			treeTIOSTS.put(schema, newTIOSTS);

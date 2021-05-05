@@ -82,7 +82,12 @@ public class GenerateHidingOperator extends JFrame {
 					model = hidOperator.hidingOperator(model, name);
 				} catch (IncompatibleCompositionalOperationException e) {
 					e.printStackTrace();
+				} catch (Exception e) {
+					compositionScreen.getTextEditor().setText(e.toString());
+					dispose();
+					return;
 				}
+				compositionScreen.getTextEditor().setText("Operator performed successfully");
 				compositionScreen.addTIOSTS(newName, model);
 				dispose();
 			}

@@ -159,11 +159,15 @@ public class GenerateSRT {
 					for (MyGate g : gate) {
 						if(dataTransition.contains(" " + g.getName())) {
 							if(dataTransition.contains("?")) {
-								control1 = true;
-								input.add(g.getName());	
+								if(dataTransition.contains(" " + g.getName() + "?")) {
+									control1 = true;
+									input.add(g.getName());	
+								}
 							}else if(dataTransition.contains("!")) {
-								control2 = true;
-								output.add(g.getName());	
+								if(dataTransition.contains(" " + g.getName() + "!")) {
+									control2 = true;
+									output.add(g.getName());	
+								}
 							}else {
 								control3 = true;
 								internal.add(g.getName());

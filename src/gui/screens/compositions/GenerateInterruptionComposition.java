@@ -94,7 +94,12 @@ public class GenerateInterruptionComposition extends JFrame {
 					modelResult = intComposition.interruptionComposition(spec1, spec2);
 				} catch (IncompatibleCompositionalOperationException e) {
 					e.printStackTrace();
+				} catch (Exception e) {
+					compositionScreen.getTextEditor().setText(e.toString());
+					dispose();
+					return;
 				}
+				compositionScreen.getTextEditor().setText("Composition performed successfully");
 				compositionScreen.addTIOSTS(name, modelResult);
 				dispose();
 			}

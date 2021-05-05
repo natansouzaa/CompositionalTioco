@@ -57,8 +57,15 @@ public class VertexInsert extends JFrame {
 				}else {
 					tiosts.getGraph().getModel().beginUpdate();
 					try{
-						Object v1 = tiosts.getGraph().insertVertex(parent, null, textField.getText(), x, y, 50, 50, "shape=ellipse;perimeter=ellipsePerimeter");	
+						Object v1;
+						if(tiosts.getAllCells().size()==0) {
+							v1 = tiosts.getGraph().insertVertex(parent, null, textField.getText(), x, y, 50, 50, "shape=doubleEllipse;perimeter=ellipsePerimeter;fillColor=gray;");	
+							tiosts.setInit((mxCell) v1);							
+						}else {
+							v1 = tiosts.getGraph().insertVertex(parent, null, textField.getText(), x, y, 50, 50, "shape=ellipse;perimeter=ellipsePerimeter");	
+						}
 						tiosts.getAllCells().add((mxCell) v1);
+						
 						dispose();
 					}
 					finally{

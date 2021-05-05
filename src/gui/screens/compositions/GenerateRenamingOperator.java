@@ -92,7 +92,12 @@ public class GenerateRenamingOperator extends JFrame {
 					model = renOperator.renamingOperator(model, currentName, newName);
 				} catch (IncompatibleCompositionalOperationException e) {
 					e.printStackTrace();
+				} catch (Exception e) {
+					compositionScreen.getTextEditor().setText(e.toString());
+					dispose();
+					return;
 				}
+				compositionScreen.getTextEditor().setText("Operator performed successfully");
 				compositionScreen.addTIOSTS(tiostsName, model);
 				dispose();
 			}

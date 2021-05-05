@@ -1,8 +1,13 @@
 package gui.screens;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -80,19 +85,169 @@ public class CompositionScreen extends JFrame {
 		splitPane.setLeftComponent(scrollPane);
 
 		//tree
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new IconNode(fileChooser.getSelectedFile().getName(), "/gui/icons/tab.png"));
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new IconNode(fileChooser.getSelectedFile().getName(), "/gui/src/icons/max_folder.png"));
 		tree = new JTree(root);
 		tree.setCellRenderer(new TreeRenderer());
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		
 		for (String nome : setTIOSTS.keySet()) {
-			inserNode(nome, setTIOSTS.get(nome));
+			inserNode(nome, setTIOSTS.get(nome), null);
 		}
 		scrollPane.setViewportView(tree);
 		
-		//tabbedPane
-//		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-//		splitPane.setRightComponent(tabbedPane);
+		//menu
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+				
+		JMenu menu1 = new JMenu("File");
+		menuBar.add(menu1);
+		
+		JMenu menu2 = new JMenu("Edit");
+		menuBar.add(menu2);
+		
+		JMenu menu3 = new JMenu("Help");
+		menuBar.add(menu3);
+		
+		JMenuItem item1Menu1 = new JMenuItem("Open new editor");
+		item1Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/max_newProject.png")));
+		item1Menu1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				new GraphEditor();
+			}
+		});
+		menu1.add(item1Menu1);
+		
+		JMenuItem item2Menu1 = new JMenuItem("Import new SRT");
+		item2Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/max_newProject.png")));
+		item2Menu1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				new Upload();
+			}
+		});
+		menu1.add(item2Menu1);
+		
+		JMenuItem item4Menu1 = new JMenuItem("Exit");
+		item4Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/max_save.png")));
+		item4Menu1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
+		menu1.add(item4Menu1);
+		
+		JMenu item1Menu2 = new JMenu("Compositions");
+//		item1Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/icons/handCursor.png")));
+		item1Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+//
+			}
+		});
+		menu2.add(item1Menu2);
+		
+		JMenu item2Menu2 = new JMenu("Operators");
+//		item2Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/icons/handCursor.png")));
+		item2Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+//
+			}
+		});
+		menu2.add(item2Menu2);
+		
+		JMenuItem item1item1Menu2 = new JMenuItem("Sequential Composition");
+		item1item1Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/SequentialComposition.png")));
+		item1item1Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new GenerateSequentialComposition(setTIOSTS,  CompositionScreen.this);
+			}
+		});
+		item1Menu2.add(item1item1Menu2);
+		
+		JMenuItem item2item1Menu2 = new JMenuItem("Parallel Composition");
+		item2item1Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/ParallelComposition.png")));
+		item2item1Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new GenerateParallelComposition(setTIOSTS,  CompositionScreen.this);
+			}
+		});
+		item1Menu2.add(item2item1Menu2);
+		
+		JMenuItem item3item1Menu2 = new JMenuItem("Interruption Composition");
+		item3item1Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/InterruptionComposition.png")));
+		item3item1Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new GenerateInterruptionComposition(setTIOSTS,  CompositionScreen.this);
+			}
+		});
+		item1Menu2.add(item3item1Menu2);
+		
+		JMenuItem item1item2Menu2 = new JMenuItem("Renaming Operator");
+		item1item2Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/RenamingOperator.png")));
+		item1item2Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new GenerateRenamingOperator(setTIOSTS,  CompositionScreen.this);
+			}
+		});
+		item2Menu2.add(item1item2Menu2);
+		
+		JMenuItem item2item2Menu2 = new JMenuItem("Hiding Operator");
+		item2item2Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/HidingOperator.png")));
+		item2item2Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new GenerateHidingOperator(setTIOSTS,  CompositionScreen.this);
+			}
+		});
+		item2Menu2.add(item2item2Menu2);
+		
+		JMenuItem item3Menu1 = new JMenuItem("Generate Tests");
+		item3Menu1.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/GenerateTestCases.png")));
+		item3Menu1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new GenerateTestCases(setTIOSTS,  CompositionScreen.this);
+			}
+		});
+		menu2.add(item3Menu1);
+		
+		JMenuItem item9Menu2 = new JMenuItem("Remove TIOSTS");
+		item9Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/remove.png")));
+		item9Menu2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int cont = tree.getSelectionModel().getLeadSelectionRow();
+				DefaultTreeModel model1 = (DefaultTreeModel) tree.getModel();
+				DefaultMutableTreeNode root1 = (DefaultMutableTreeNode) model1.getRoot();
+				if(cont<0) {
+					JOptionPane.showMessageDialog(null, "Select a TIOSTS to remove.", "Warning" , JOptionPane.WARNING_MESSAGE);
+				}else if (cont==0){
+					JOptionPane.showMessageDialog(null, "Only removal of child nodes is allowed.", "Warning" , JOptionPane.WARNING_MESSAGE);
+				} else {
+					DefaultMutableTreeNode ab = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+					if (((IconNode) ab.getUserObject()).getColor()==null) {
+						JOptionPane.showMessageDialog(null, "Dont remove original tiosts.", "Warning" , JOptionPane.WARNING_MESSAGE);
+					}else {
+						if(treeTIOSTS.containsKey(ab)) {
+							TIOSTS y = treeTIOSTS.get(ab);
+							System.out.print(y.getName());
+							String x = ab.toString();
+							setTIOSTS.remove(x);
+							model1.removeNodeFromParent(ab);
+						}
+						model1.reload(root1);		
+					}
+				}
+			}
+		});
+		menu2.add(item9Menu2);
+
+		JMenuItem item1Menu3 = new JMenuItem("Help");
+		item1Menu3.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/Help.png")));
+		item1Menu3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//
+			}
+		});
+		menu3.add(item1Menu3);
+		//
 		
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.NORTH);
@@ -116,7 +271,7 @@ public class CompositionScreen extends JFrame {
 			}
 		});
 		toolBar3.add(button1);
-		button1.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/icons/a-24.png")));
+		button1.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/src/icons/GenerateTestCases.png")));
 		button1.setToolTipText("Generate Tests");
 		
 		JButton button2 = new JButton("");
@@ -126,7 +281,7 @@ public class CompositionScreen extends JFrame {
 			}
 		});
 		toolBar1.add(button2);
-		button2.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/icons/b-24.png")));
+		button2.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/src/icons/SequentialComposition.png")));
 		button2.setToolTipText("Sequential Composition");
 
 		JButton button3 = new JButton("");
@@ -136,7 +291,7 @@ public class CompositionScreen extends JFrame {
 			}
 		});
 		toolBar1.add(button3);
-		button3.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/icons/c-24.png")));
+		button3.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/src/icons/ParallelComposition.png")));
 		button3.setToolTipText("Parallel Composition");
 
 		JButton button4 = new JButton("");
@@ -146,7 +301,7 @@ public class CompositionScreen extends JFrame {
 			}
 		});
 		toolBar1.add(button4);
-		button4.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/icons/d-24.png")));
+		button4.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/src/icons/InterruptionComposition.png")));
 		button4.setToolTipText("Interruption Composition");
 
 		JButton button5 = new JButton("");
@@ -156,7 +311,7 @@ public class CompositionScreen extends JFrame {
 			}
 		});
 		toolBar2.add(button5);
-		button5.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/icons/e-24.png")));
+		button5.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/src/icons/HidingOperator.png")));
 		button5.setToolTipText("Hiding Operator");
 		
 		JButton button6 = new JButton("");
@@ -166,15 +321,20 @@ public class CompositionScreen extends JFrame {
 			}
 		});
 		toolBar2.add(button6);
-		button6.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/icons/f-24.png")));
+		button6.setIcon(new ImageIcon(CompositionScreen.class.getResource("/gui/src/icons/RenamingOperator.png")));
 		button6.setToolTipText("Renaming Operator");
 	}
 	
-	public void inserNode(String name, TIOSTS tiosts) {
-		IconNode node1 = new IconNode(name, "/gui/icons/graph.png");
+	public void inserNode(String name, TIOSTS tiosts, Color color) {
+		IconNode node1;
+		if(color!=null) {
+			node1 = new IconNode(name, "/gui/src/icons/TIOSTS.png", color);			
+		}else {
+			node1 = new IconNode(name, "/gui/src/icons/TIOSTS.png");			
+		}
 		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+		
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-
 		DefaultMutableTreeNode schema = new DefaultMutableTreeNode(node1);
 		root.add(schema);
 		
@@ -187,7 +347,6 @@ public class CompositionScreen extends JFrame {
 		try {
 			novo = new ReaderSRT(getFileChooser()).main();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(novo.size()>0) {
@@ -199,7 +358,7 @@ public class CompositionScreen extends JFrame {
 		HashMap<String, TIOSTS> novo = getSetTIOSTS();
 		novo.put(name, novoTIOSTS);
 		setSetTIOSTS(novo);
-		inserNode(name, novoTIOSTS);
+		inserNode(name, novoTIOSTS, new Color(13, 57 ,115));
 	}
 	
 	public HashMap<DefaultMutableTreeNode, TIOSTS> getTreeTIOSTS() {

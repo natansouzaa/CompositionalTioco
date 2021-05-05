@@ -1,5 +1,6 @@
 package gui.util;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
@@ -17,7 +18,7 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
     private final ImageIcon defaultIcon;
 
     public TreeRenderer() {
-    	defaultIcon = new ImageIcon(TreeRenderer.class.getResource("/gui/icons/sheet.png"));
+    	defaultIcon = new ImageIcon(TreeRenderer.class.getResource("/gui/src/icons/max_sheet.png"));
     }
 
     @Override
@@ -28,6 +29,9 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
         Object userObject = node.getUserObject();
         if (userObject instanceof IconNode) {
             IconNode pp = (IconNode) userObject;
+            if(pp.getColor()!=null) {
+               this.setForeground(Color.RED);
+            }
             this.setText(pp.getName());
             this.setIcon(new ImageIcon(TreeRenderer.class.getResource(pp.getRole())));
         } else if (userObject instanceof SimpleNode) {
