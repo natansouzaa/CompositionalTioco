@@ -77,26 +77,16 @@ public class GenerateTestCases extends JFrame {
 				String itemSelected2 = (String) comboBox2.getSelectedItem();
 				TIOSTS spec1 = collection.get(itemSelected1);
 				TIOSTS spec2 = collection.get(itemSelected2);
-				String output = "";
 				long start = System.currentTimeMillis();
 
 				SYMBOLRT symbolrt = SYMBOLRT.getInstance();
 				List<TIOSTS> testCases = symbolrt.generateTestCases(spec1, spec2, true);
-
-//				int cont = symbolrt.show(testCases);
-//				System.out.println(cont);
-
-				
-				output += "Total transitions: " + spec1.getTransitions().size() + "\n";
-				output += "Total locations: " + spec1.getLocations().size() + "\n";
-				
+										
 				long finish = System.currentTimeMillis();
 				long result = finish - start;
-
-//				output += testCases.size() + " test case(s) generated in " + result + " milliseconds.";
+				String output = "Test case(s) generated in " + result + " milliseconds.";	
 				
 				compositionScreen.getTextEditor().setText(output);
-				
 				openDirectory();
 				dispose();
 			}

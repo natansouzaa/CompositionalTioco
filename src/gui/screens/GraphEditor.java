@@ -37,7 +37,6 @@ import javax.swing.tree.TreeSelectionModel;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 
-import gui.examples.CellPhoneApp;
 import gui.types.MyTIOSTS;
 import gui.util.IconNode;
 import gui.util.GenerateSRT;
@@ -206,10 +205,7 @@ public class GraphEditor extends JFrame {
 			
 		JMenu menu3 = new JMenu("Edit");
 		menuBar.add(menu3);
-		
-		JMenu menu2 = new JMenu("Examples");
-		menuBar.add(menu2);
-		
+			
 		JMenu menu4 = new JMenu("Help");
 		menuBar.add(menu4);
 		
@@ -269,20 +265,11 @@ public class GraphEditor extends JFrame {
 		});
 		menu1.add(item5Menu1);
 		
-		JMenuItem item1Menu2 = new JMenuItem("CellPhoneApp");
-		item1Menu2.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/Help.png")));
-		item1Menu2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				new CellPhoneApp(GraphEditor.this).main();
-			}
-		});
-		menu2.add(item1Menu2);
-		
 		JMenuItem item1Menu4 = new JMenuItem("Help");
 		item1Menu4.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/Help.png")));
 		item1Menu4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//
+				new Help();
 			}
 		});
 		menu4.add(item1Menu4);
@@ -500,7 +487,7 @@ public class GraphEditor extends JFrame {
 	
 	private JFileChooser showSaveFileDialog() {
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Specify a file to save");
+		fileChooser.setDialogTitle("Specify a name to save");
 		
 		//filter
 		FileFilter filter = new FileNameExtensionFilter("SRT files (*.srt)", "srt");

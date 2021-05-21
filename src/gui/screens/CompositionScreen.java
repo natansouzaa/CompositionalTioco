@@ -243,7 +243,7 @@ public class CompositionScreen extends JFrame {
 		item1Menu3.setIcon(new ImageIcon(GraphEditor.class.getResource("/gui/src/icons/Help.png")));
 		item1Menu3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//
+				new Help();
 			}
 		});
 		menu3.add(item1Menu3);
