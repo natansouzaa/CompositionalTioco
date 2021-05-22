@@ -10,6 +10,8 @@ import gui.screens.CompositionScreen;
 
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
+import javax.swing.JRadioButton;
 
 
 public class GenerateTestCases extends JFrame {
@@ -70,6 +73,19 @@ public class GenerateTestCases extends JFrame {
 		contentPane.add(comboBox2);
 		comboBox2.setModel(new DefaultComboBoxModel<String>(items));
 
+		JRadioButton rdbtnGenerateAsPng = new JRadioButton("Generate as PNG");
+		rdbtnGenerateAsPng.setSelected(true);
+		rdbtnGenerateAsPng.setBounds(30, 111, 149, 23);
+		contentPane.add(rdbtnGenerateAsPng);
+		
+		JRadioButton rdbtnGenerateAsXml = new JRadioButton("Generate as XML");
+		rdbtnGenerateAsXml.setBounds(30, 138, 149, 23);
+		contentPane.add(rdbtnGenerateAsXml);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(rdbtnGenerateAsPng);
+		group.add(rdbtnGenerateAsXml);
+		
 		JButton btnNewButton = new JButton("Generate");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -77,17 +93,22 @@ public class GenerateTestCases extends JFrame {
 				String itemSelected2 = (String) comboBox2.getSelectedItem();
 				TIOSTS spec1 = collection.get(itemSelected1);
 				TIOSTS spec2 = collection.get(itemSelected2);
-				long start = System.currentTimeMillis();
-
 				SYMBOLRT symbolrt = SYMBOLRT.getInstance();
-				List<TIOSTS> testCases = symbolrt.generateTestCases(spec1, spec2, true);
-										
-				long finish = System.currentTimeMillis();
-				long result = finish - start;
-				String output = "Test case(s) generated in " + result + " milliseconds.";	
 				
-				compositionScreen.getTextEditor().setText(output);
-				openDirectory();
+				JFileChooser fileChooser = showSaveFileDialog();
+				if(fileChooser!=null) {
+					String directory = fileChooser.getSelectedFile().toString() + "/";
+					
+					long start = System.currentTimeMillis();
+					List<TIOSTS> testCases = symbolrt.generateTestCases(spec1, spec2, true, directory, rdbtnGenerateAsPng.isSelected());
+					long finish = System.currentTimeMillis();
+					long result = finish - start;
+					
+					String output = "Test case(s) generated in " + result + " milliseconds.";	
+					
+					compositionScreen.getTextEditor().setText(output);
+					openDirectory(directory);
+				}
 				dispose();
 			}
 		});
@@ -95,14 +116,27 @@ public class GenerateTestCases extends JFrame {
 		contentPane.add(btnNewButton);
 	}
 	
-	private void openDirectory() {
+	private void openDirectory(String directory) {
 		Desktop desktop = Desktop.getDesktop();
         File dirToOpen = null;
         try {
-        	dirToOpen = new File("./testcases/");
+        	dirToOpen = new File(directory);
         	desktop.open(dirToOpen);
         } catch (IOException e) {
         	System.out.println("File Not Found");
         }
+	}
+	
+	private JFileChooser showSaveFileDialog() {
+		JFileChooser chooser = new JFileChooser(); 
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Select a directory");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+		
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) { 
+		    return chooser;
+		}
+		return null;
 	}
 }

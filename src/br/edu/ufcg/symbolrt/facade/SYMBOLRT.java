@@ -78,7 +78,73 @@ public class SYMBOLRT {
 		}
 		return instance;
 	}
+	
+	//teste
+	public List<TIOSTS> generateTestCases(TIOSTS specification, TIOSTS testPurpose, boolean showModels, String path, Boolean control){
+		Completion completionOperation = Completion.getInstance();
+		TIOSTS tpComplete = null;
+		try {
+			tpComplete = completionOperation.complete(testPurpose);
+		} catch (ClockGuardException e) {
+			System.out.println(e.getMessage());
+		}
+			
+		completionOperation = null;
+			
+		if (showModels) {
+			List<TIOSTS> intermediateModels = new ArrayList<TIOSTS>();
+			intermediateModels.add(specification);
+			intermediateModels.add(testPurpose);
+			intermediateModels.add(tpComplete);
+			show(intermediateModels, path, control);
+		}
+		
+		SynchronousProduct synchronousOperation = SynchronousProduct.getInstance();
+		TIOSTS sp = null;
+		try {
+			sp = synchronousOperation.synchronousProduct(specification, tpComplete);
+		} catch (IncompatibleSynchronousProductException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		if (showModels) {
+			List<TIOSTS> intermediateModels = new ArrayList<TIOSTS>();
+			intermediateModels.add(sp);
+			show(intermediateModels, path, control);
+		}
+			
+		synchronousOperation = null;
+		specification = null;
+		testPurpose = null;
+		tpComplete = null;
+		System.gc();
 
+		SymbolicExecution symb = SymbolicExecution.getInstance();
+		SymbolicExecutionTree zset = null;
+		try {
+			zset = symb.execute(sp);
+		} catch (SymbolicValueNameException e) {
+			System.out.println(e.getMessage());
+		}		
+
+		TestCaseSelection tcSelection = TestCaseSelection.getInstance();
+		List<SymbolicExecutionTree> testTrees = tcSelection.selectAllTestCases(zset);
+			
+		symb = null;
+		zset = null;
+		tcSelection = null;	
+
+		List<TIOSTS> testCases = new ArrayList<TIOSTS>();
+			
+		TestTreeTransformation tt = TestTreeTransformation.getInstance();
+		for (SymbolicExecutionTree testTree: testTrees) {
+			testCases.add(tt.translateTestTree(testTree, sp));
+		}
+
+		tt = null;
+		sp  = null;
+		return testCases;
+	}
 	
 	/**
 	 * Generates test cases from a specification and a test purpose.
@@ -178,6 +244,15 @@ public class SYMBOLRT {
 		sp  = null;
 		
 		return testCases;
+	}
+	
+	//teste
+	public void show(List<TIOSTS> models, String path, Boolean control) {
+		GraphVisualization tiostsVisualization = new GraphVisualization();
+		for (TIOSTS tiosts: models) {
+			//tiostsVisualization.show(tiosts);		
+			tiostsVisualization.save(tiosts, path, control);
+		}
 	}
 	
 	/**

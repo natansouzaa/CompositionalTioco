@@ -30,9 +30,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
@@ -146,6 +148,51 @@ public class GraphVisualization {
 		frame.setVisible(true);
 	}
 	
+	//teste
+	private void saveAsXML(String fileName, mxGraphComponent graphComponent, String path) throws IOException {
+		try {
+			mxCodec codec = new mxCodec();
+			String xml = mxUtils.getXml(codec.encode(graphComponent.getGraph().getModel()));
+
+			FileOutputStream outputStream = new FileOutputStream(new File(path + fileName + ".xml"));
+			OutputStreamWriter osw = new OutputStreamWriter(outputStream);
+	        BufferedWriter bw = new BufferedWriter(osw);
+	        
+	        bw.write(xml);
+			bw.close();
+			osw.close();
+			outputStream.close();
+		}catch(Exception ex){
+			System.out.println("ERROR: " + ex.getMessage());
+		}
+	}
+	
+	//teste
+	private void saveAsPNG(String fileName, mxGraphComponent graphComponent, String path) throws IOException {
+		// Creates the image for the PNG file
+		BufferedImage image = mxCellRenderer.createBufferedImage(graphComponent.getGraph(),
+				null, 1, new Color(255,255,255), graphComponent.isAntiAlias(), null,
+				graphComponent.getCanvas());
+		
+		// Creates the URL-encoded XML data
+		mxCodec codec = new mxCodec();
+		String xml = URLEncoder.encode(mxUtils.getXml(codec.encode(graphComponent.getGraph().getModel())), "UTF-8");
+
+		mxPngEncodeParam param = mxPngEncodeParam.getDefaultEncodeParam(image);
+		param.setCompressedText(new String[] { "mxGraphModel", xml });
+
+		// Saves as a PNG file
+		FileOutputStream outputStream = new FileOutputStream(new File(path + fileName + ".png"));
+		mxPngImageEncoder encoder = new mxPngImageEncoder(outputStream, param);
+
+		if (image != null) {
+			encoder.encode(image);
+		} else {
+			System.out.println("Warning: " + mxResources.get("noImageData"));
+		}
+		
+		outputStream.close();
+	}
 	
 	/**
 	 * Saves a graph component as a PNG file.
@@ -179,7 +226,28 @@ public class GraphVisualization {
 		outputStream.close();
 	}
 	
-	
+	//teste
+	public void save(TIOSTS tiosts, String path, Boolean control){
+		// Translates a TIOSTS to mxGraph 
+		mxGraph graph = TIOSTS2mxGraph(tiosts);
+		
+		mxGraphComponent graphComponent = new mxGraphComponent(graph);
+		
+		// Defines the layout
+		mxIGraphLayout layout = new mxHierarchicalLayout(graph);
+		layout.execute(graph.getDefaultParent());
+
+		try {
+			if(control) {
+				saveAsPNG(tiosts.getName(), graphComponent, path);
+			}else {
+				saveAsXML(tiosts.getName(), graphComponent, path);				
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+		
 	/**
 	 * Saves a TIOSTS model as an image.
 	 * @param tiosts The TOSTS model to be saved.
