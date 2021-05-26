@@ -40,6 +40,7 @@ import java.util.HashMap;
 
 import javax.swing.JTree;
 import java.awt.FlowLayout;
+import java.awt.Dimension;
 
 public class CompositionScreen extends JFrame {
 
@@ -82,10 +83,15 @@ public class CompositionScreen extends JFrame {
 
 		//scrollPane
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setMinimumSize(new Dimension(250, 22));
 		splitPane.setLeftComponent(scrollPane);
 
 		//tree
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new IconNode(fileChooser.getSelectedFile().getName(), "/gui/src/icons/max_folder.png"));
+		String fileName = fileChooser.getSelectedFile().getName();
+		if (fileName.contains(".srt")) {
+			fileName = fileName.substring(0, fileName.length()-4);
+		}
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new IconNode(fileName, "/gui/src/icons/max_folder.png"));
 		tree = new JTree(root);
 		tree.setCellRenderer(new TreeRenderer());
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

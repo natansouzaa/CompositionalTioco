@@ -47,6 +47,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import java.awt.Dimension;
 
 public class GraphEditor extends JFrame {
 
@@ -138,6 +139,7 @@ public class GraphEditor extends JFrame {
 		contentPane.add(splitPane, BorderLayout.CENTER);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setMinimumSize(new Dimension(250, 22));
 		splitPane.setLeftComponent(scrollPane);
 		
 		panel_1 = new JPanel();

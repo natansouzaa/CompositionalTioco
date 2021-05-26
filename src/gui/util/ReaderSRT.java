@@ -29,6 +29,9 @@ public class ReaderSRT {
 	
 	public HashMap<String, TIOSTS> main() throws IOException {
 		String path = getFileChooser().getSelectedFile().getPath();
+		if(!path.contains(".srt")) {
+			path+=".srt";
+		}
 		Compiler.compile(path, null);
 		
 //		TIOSTS tiostsSpec = Compiler.getSpecification(specName1);

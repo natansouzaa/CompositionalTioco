@@ -1,7 +1,7 @@
 package gui.screens;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 import gui.util.IconNode;
@@ -19,12 +20,15 @@ import gui.util.SimpleNode;
 import gui.util.TreeRenderer;
 
 import javax.swing.JTree;
+import java.awt.Dimension;
 
 public class Help extends JFrame {
-
+	
+	private JTree tree;
 	private JPanel contentPane;
-	private JTextPane textEditor;
-	private ArrayList<String> texto = new ArrayList<String>();
+	private JTextPane textEditor;	
+	private HashMap<DefaultMutableTreeNode, String> map = new HashMap<DefaultMutableTreeNode, String>();
+
 	/**
 	 * Create the frame.
 	 */
@@ -44,15 +48,14 @@ public class Help extends JFrame {
 		
 		//scrollPane
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setMinimumSize(new Dimension(250, 22));
 		splitPane.setLeftComponent(scrollPane);
 
 		//tree
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new IconNode("Compositional tioco", "/gui/src/icons/max_folder.png"));
-		JTree tree = new JTree(root);
+		tree = new JTree(root);
 		tree.setCellRenderer(new TreeRenderer());
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setExpandsSelectedPaths(true);
-		scrollPane.setViewportView(tree);
 		
 		//textEditor
 		textEditor = new JTextPane();
@@ -78,12 +81,10 @@ public class Help extends JFrame {
 						+ "<li>T is a finite set of transitions.</li>"
 					+ "</ul>"
 				+ "</html>";
-		texto.add(text);
-		root.add(new DefaultMutableTreeNode(new SimpleNode("TIOSTS")));
+		insertNode("TIOSTS", text, "/gui/src/icons/TIOSTS.png", null);
 		//
-		DefaultMutableTreeNode compositions = new DefaultMutableTreeNode(new IconNode("Compositions", "/gui/src/icons/max_folder.png"));
-		root.add(compositions);
-
+		DefaultMutableTreeNode nodeCompositions = insertNode("Compositions", "", "/gui/src/icons/max_folder.png", null);
+		
 		String sequentialComposition = ""
 				+ "<html>"
 					+ "<style>p{text-align: justify}</style>"
@@ -92,8 +93,8 @@ public class Help extends JFrame {
 					+ "finishes before the second starts. We used the message passing paradigm to define this operator in a way that information is communicated"
 					+ "from one subsystem to another through a single action which is present in both subsystems.</p>"
 				+ "</html>";
-		texto.add(sequentialComposition);
-		compositions.add(new DefaultMutableTreeNode(new SimpleNode("Sequential Composition")));
+
+		insertNode("Sequential Composition", sequentialComposition, "/gui/src/icons/SequentialComposition.png", nodeCompositions);
 		//
 		String interruptionComposition = ""
 				+ "<html>"
@@ -103,8 +104,7 @@ public class Help extends JFrame {
 					+ "are instantly required. For example, consider a phone call that arrives when the user is editing a document on a smartphone. This is an"
 					+ "application level interruption and the effect is that the call subsystem is brought forward, sending the edition subsystem to the background.</p>"
 				+ "</html>";
-		texto.add(interruptionComposition);
-		compositions.add(new DefaultMutableTreeNode(new SimpleNode("Interruption Composition")));
+		insertNode("Interruption Composition", interruptionComposition, "/gui/src/icons/InterruptionComposition.png", nodeCompositions);
 		//
 		String parallelComposition = ""
 				+ "<html>"
@@ -114,9 +114,10 @@ public class Help extends JFrame {
 					+ "either execute independently or may communicate to each other by using messages, defined as parameterized shared actions with the same label, but"
 					+ "opposing input or output types. Also, during the synchronization process, an input action can be communicated to a single output action and vice-versa.</p>"
 				+ "</html>";
-		texto.add(parallelComposition);
-		compositions.add(new DefaultMutableTreeNode(new SimpleNode("Parallel Composition")));
+		insertNode("Parallel Composition", parallelComposition, "/gui/src/icons/ParallelComposition.png", nodeCompositions);
 		//
+		DefaultMutableTreeNode nodeOperators = insertNode("Operators", "", "/gui/src/icons/max_folder.png", null);
+
 		String hidingOperator = ""
 				+ "<html>"
 					+ "<style>p{text-align: justify}</style>"
@@ -124,8 +125,7 @@ public class Help extends JFrame {
 					+ "<p>The hiding operator replaces each action from a predefined set by the τ action. A consequence from this composition is that hidden actions"
 					+ "cannot be seen by subsystems which are outside the composition.</p>"
 				+ "</html>";
-		texto.add(hidingOperator);
-		compositions.add(new DefaultMutableTreeNode(new SimpleNode("Hiding Operator")));
+		insertNode("Hiding Operator", hidingOperator, "/gui/src/icons/HidingOperator.png", nodeOperators);
 		//
 		String renamingOperator = ""
 				+ "<html>"
@@ -133,26 +133,43 @@ public class Help extends JFrame {
 				+ "<h1>Renaming Operator</h1>"
 				+ "<p>This operator is responsible for replacing a set of actions by others.</p>"
 				+ "</html>";
-		texto.add(renamingOperator);
-		compositions.add(new DefaultMutableTreeNode(new SimpleNode("Renaming Operator")));
+		insertNode("Renaming Operator", renamingOperator, "/gui/src/icons/RenamingOperator.png", nodeOperators);
 		//
-	
+		scrollPane.setViewportView(tree);
+
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
 				int cont = tree.getSelectionModel().getLeadSelectionRow();
-				if(cont <= 0 || cont == 2) {
-					getTextPane().setText("<html><style>p{text-align: left}</style><p>For more information access: <a href=\"\">https://sites.google.com/site/compositionaltioco/home/</a></p></html>");;
-				}else if (cont==1){
-					getTextPane().setText(texto.get(cont-1));;
+				if(cont <= 0) {
+					textEditor.setText("<html><style>p{text-align: left}</style><p>For more information access: <a href=\"\">https://sites.google.com/site/compositionaltioco/home/</a></p></html>");
 				}else{
-					getTextPane().setText(texto.get(cont-2));;
+					textEditor.setText(map.get(tree.getLastSelectedPathComponent()));
 				}
 			}
 		});
 	}
 	
-	private JTextPane getTextPane() {
-		return this.textEditor;
+	private DefaultMutableTreeNode insertNode(String name, String text, String iconPath, DefaultMutableTreeNode node) {
+		DefaultMutableTreeNode sheet;
+		if(iconPath==null) {
+			SimpleNode newNode = new SimpleNode(name);		
+			sheet = new DefaultMutableTreeNode(newNode);
+		}else {
+			IconNode newNode = new IconNode(name, iconPath);
+			sheet = new DefaultMutableTreeNode(newNode);
+		}
+		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+		 
+		if(node==null) {
+			root.add(sheet);
+		}else {
+			node.add(sheet);
+		}
+		
+		map.put(sheet, text);
+		model.reload(root);		
+		return sheet;
 	}
 }
