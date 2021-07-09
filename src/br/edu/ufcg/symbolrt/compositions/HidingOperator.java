@@ -87,7 +87,7 @@ public class HidingOperator {
 		
 		RenamingOperator renOperator = RenamingOperator.getInstance();
 		try {
-			tiostsRen = renOperator.renamingOperator(model1, aName, "τ");
+			tiostsRen = renOperator.renamingOperator(model1, aName, "Tal");
 		} catch (IncompatibleCompositionalOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
