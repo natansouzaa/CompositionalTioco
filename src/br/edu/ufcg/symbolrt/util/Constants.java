@@ -217,7 +217,7 @@ public class Constants {
 	/**
 	 * A constant that represents the satisfiable response of CVC3.
 	 */
-	public static final String CVC3_RESPONSE_SATISFIABLE = "Satisfiable.";
+	public static final String CVC3_RESPONSE_SATISFIABLE = "sat";
 	
 	
 	
