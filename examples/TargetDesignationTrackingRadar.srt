@@ -580,3 +580,58 @@ transition
 		sync ChangeModeRadar!()
 	to Reject;
 
+process TargetDesignationTrackingRadarTP10;
+
+input 
+	SelectTD, SelectR;
+
+output
+	Undesignate, ChangeModeHUD, ChangeModeRadar, TargetPosition, FinishTargetDesignation, Track, FinishTargetTracking;	
+
+internal
+	InitTD_InitR;
+
+state
+	init: STARTC;
+	S60;
+	S61;
+	S62;
+	S63;
+	S64;
+	S65;
+	Accept;
+	Reject;
+
+transition
+	from STARTC
+		sync InitTD_InitR()
+	to S60;
+	from S60
+		sync SelectTD?(op, info)
+	to S61;
+	from S61
+		sync SelectR?(op)
+	to S62;
+	from S62
+		sync TargetPosition!(r, a, e)
+	to S63;
+	from S63
+		sync FinishTargetDesignation!(op, info)
+	to S64;
+	from S64
+		sync Track!(info)
+	to Accept;
+	//Excluding scenarious that start in Radar subsystem
+	from S60
+		sync SelectR?(op)
+	to Reject;
+	from S62
+		sync SelectR?(op)
+	to Reject;
+	from S62
+		sync ChangeModeHUD!()
+	to Reject;
+	from S62
+		sync ChangeModeRadar!()
+	to Reject;
+
