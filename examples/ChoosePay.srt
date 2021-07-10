@@ -75,10 +75,10 @@ transition
 process Pay;
 
 input
-	Send, Sign;
+	Send;
 
 output
-	Pay, FinishSystem, Discard;
+	Pay, FinishSystem, Sign, Discard;
 
 internal
 	InitP;
@@ -121,7 +121,7 @@ transition
 	from S6
 		when clockP  <= 20
 		if (optionP = 2)				
-		sync Sign?(info)
+		sync Sign!(info)
 		do signature := info
 	to S9;
 	from S9
@@ -133,6 +133,7 @@ transition
 		if (signature = TRUE)				
 		sync Pay!()
 	to S10;
+
 
 process ChoosePayTP1;
 
@@ -188,3 +189,27 @@ transition
 	from S21
 		sync FinishSystem!()
 	to Accept;
+	
+process ChoosePayTP3;
+
+output
+	Send;
+
+internal
+	InitC;
+
+state
+	init: START;
+	S20;
+	S21;
+	Accept;
+
+transition
+
+	// Main Scenario
+	from START
+		sync InitC()
+	to S20;
+	from S20
+		sync Send!(op)
+	to Accept;	
