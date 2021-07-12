@@ -93,6 +93,7 @@ public class GenerateTestCases extends JFrame {
 				String itemSelected2 = (String) comboBox2.getSelectedItem();
 				TIOSTS spec1 = collection.get(itemSelected1);
 				TIOSTS spec2 = collection.get(itemSelected2);
+				
 				SYMBOLRT symbolrt = SYMBOLRT.getInstance();
 				
 				JFileChooser fileChooser = showSaveFileDialog();
@@ -104,8 +105,16 @@ public class GenerateTestCases extends JFrame {
 					long finish = System.currentTimeMillis();
 					long result = finish - start;
 					
-					String output = "Test case(s) generated in " + result + " milliseconds.";	
+					int size = testCases.size();
+					String output;
 					
+					if(size>0) {
+						output = size + " test case(s) generated in " + result + " milliseconds.";							
+					}else {
+						output = "No test case generated";							
+					}
+					
+					symbolrt.show(testCases, directory, rdbtnGenerateAsPng.isSelected());
 					compositionScreen.getTextEditor().setText(output);
 					openDirectory(directory);
 				}

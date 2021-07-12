@@ -32,23 +32,21 @@ public class ReaderSRT {
 		if(!path.contains(".srt")) {
 			path+=".srt";
 		}
-		Compiler.compile(path, null);
-		
-//		TIOSTS tiostsSpec = Compiler.getSpecification(specName1);
+		System.out.println("COMPILOU");
 		BufferedReader buffRead = new BufferedReader(new FileReader(path));
 		String linha = "";
-		while (true) {
-			if (linha != null) {
-				int tamanho = linha.length();
-				if(tamanho>7) {
-					if(linha.substring(0, 7).equals("process")) {
-						String name = linha.substring(8, tamanho-1);
-						TIOSTS tiostsSpec = Compiler.getSpecification(name);
-						mapTIOSTS.put(name, tiostsSpec);
-					}
+		while (linha != null) {
+			int tamanho = linha.length();
+			if(tamanho>7) {
+				if(linha.substring(0, 6).equals("system")) {
+					String name = linha.substring(7, tamanho-1);
+					Compiler.compile(path, name);
+				} else if (linha.substring(0, 7).equals("process")) {
+					String name = linha.substring(8, tamanho-1);
+					TIOSTS tiostsSpec = Compiler.getSpecification(name);
+					mapTIOSTS.put(name, tiostsSpec);
 				}
-			} else
-				break;
+			} 
 			linha = buffRead.readLine();
 		}
 		buffRead.close();
