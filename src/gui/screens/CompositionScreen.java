@@ -25,6 +25,7 @@ import gui.screens.compositions.GenerateParallelComposition;
 import gui.screens.compositions.GenerateRenamingOperator;
 import gui.screens.compositions.GenerateSequentialComposition;
 import gui.screens.compositions.GenerateTestCases;
+import gui.util.DateTime;
 import gui.util.IconNode;
 import gui.util.ReaderSRT;
 import gui.util.TreeRenderer;
@@ -228,18 +229,16 @@ public class CompositionScreen extends JFrame {
 					JOptionPane.showMessageDialog(null, "Only removal of child nodes is allowed.", "Warning" , JOptionPane.WARNING_MESSAGE);
 				} else {
 					DefaultMutableTreeNode ab = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-					if (((IconNode) ab.getUserObject()).getColor()==null) {
-						JOptionPane.showMessageDialog(null, "Dont remove original tiosts.", "Warning" , JOptionPane.WARNING_MESSAGE);
-					}else {
-						if(treeTIOSTS.containsKey(ab)) {
-							TIOSTS y = treeTIOSTS.get(ab);
-							System.out.print(y.getName());
-							String x = ab.toString();
-							setTIOSTS.remove(x);
-							model1.removeNodeFromParent(ab);
-						}
-						model1.reload(root1);		
+					
+					if(treeTIOSTS.containsKey(ab)) {
+						TIOSTS y = treeTIOSTS.get(ab);
+						System.out.print(y.getName());
+						String x = ab.toString();
+						setTIOSTS.remove(x);
+						model1.removeNodeFromParent(ab);
+						getTextEditor().setText("["+ DateTime.getCurrentTime() +"] " + x + " has been deleted successfully");
 					}
+					model1.reload(root1);		
 				}
 			}
 		});
@@ -364,7 +363,7 @@ public class CompositionScreen extends JFrame {
 		HashMap<String, TIOSTS> novo = getSetTIOSTS();
 		novo.put(name, novoTIOSTS);
 		setSetTIOSTS(novo);
-		inserNode(name, novoTIOSTS, new Color(13, 57 ,115));
+		inserNode(name, novoTIOSTS, null);
 	}
 	
 	public HashMap<DefaultMutableTreeNode, TIOSTS> getTreeTIOSTS() {

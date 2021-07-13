@@ -17,6 +17,7 @@ import br.edu.ufcg.symbolrt.base.TIOSTS;
 import br.edu.ufcg.symbolrt.compositions.ParallelComposition;
 import br.edu.ufcg.symbolrt.compositions.exceptions.IncompatibleCompositionalOperationException;
 import gui.screens.CompositionScreen;
+import gui.util.DateTime;
 
 public class GenerateParallelComposition extends JFrame {
 
@@ -98,8 +99,8 @@ public class GenerateParallelComposition extends JFrame {
 					dispose();
 					return;
 				}
-				compositionScreen.getTextEditor().setText("Composition performed successfully");
 				compositionScreen.addTIOSTS(name, modelResult);
+				compositionScreen.getTextEditor().setText("["+ DateTime.getCurrentTime() +"] " + "Parallel composition performed successfully");
 				dispose();
 			}
 		});

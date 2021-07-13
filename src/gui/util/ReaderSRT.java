@@ -32,7 +32,7 @@ public class ReaderSRT {
 		if(!path.contains(".srt")) {
 			path+=".srt";
 		}
-		System.out.println("COMPILOU");
+
 		BufferedReader buffRead = new BufferedReader(new FileReader(path));
 		String linha = "";
 		while (linha != null) {

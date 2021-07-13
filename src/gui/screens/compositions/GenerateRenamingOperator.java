@@ -17,6 +17,7 @@ import br.edu.ufcg.symbolrt.base.TIOSTS;
 import br.edu.ufcg.symbolrt.compositions.RenamingOperator;
 import br.edu.ufcg.symbolrt.compositions.exceptions.IncompatibleCompositionalOperationException;
 import gui.screens.CompositionScreen;
+import gui.util.DateTime;
 
 public class GenerateRenamingOperator extends JFrame {
 
@@ -97,8 +98,8 @@ public class GenerateRenamingOperator extends JFrame {
 					dispose();
 					return;
 				}
-				compositionScreen.getTextEditor().setText("Operator performed successfully");
 				compositionScreen.addTIOSTS(tiostsName, model);
+				compositionScreen.getTextEditor().setText("["+ DateTime.getCurrentTime() +"] " + "Renaming operator performed successfully");
 				dispose();
 			}
 		});

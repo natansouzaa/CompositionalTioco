@@ -7,6 +7,7 @@ import javax.swing.border.EmptyBorder;
 import br.edu.ufcg.symbolrt.base.TIOSTS;
 import br.edu.ufcg.symbolrt.facade.SYMBOLRT;
 import gui.screens.CompositionScreen;
+import gui.util.DateTime;
 
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
+import javax.swing.JCheckBox;
 
 
 public class GenerateTestCases extends JFrame {
@@ -86,6 +88,10 @@ public class GenerateTestCases extends JFrame {
 		group.add(rdbtnGenerateAsPng);
 		group.add(rdbtnGenerateAsXml);
 		
+		JCheckBox chckbxGenerateSubsystems = new JCheckBox("Generate subsystems");
+		chckbxGenerateSubsystems.setBounds(30, 165, 206, 23);
+		contentPane.add(chckbxGenerateSubsystems);
+		
 		JButton btnNewButton = new JButton("Generate");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -101,7 +107,7 @@ public class GenerateTestCases extends JFrame {
 					String directory = fileChooser.getSelectedFile().toString() + "/";
 					
 					long start = System.currentTimeMillis();
-					List<TIOSTS> testCases = symbolrt.generateTestCases(spec1, spec2, true, directory, rdbtnGenerateAsPng.isSelected());
+					List<TIOSTS> testCases = symbolrt.generateTestCases(spec1, spec2, chckbxGenerateSubsystems.isSelected(), directory, rdbtnGenerateAsPng.isSelected());
 					long finish = System.currentTimeMillis();
 					long result = finish - start;
 					
@@ -113,16 +119,17 @@ public class GenerateTestCases extends JFrame {
 					}else {
 						output = "No test case generated";							
 					}
-					
+
+					dispose();
 					symbolrt.show(testCases, directory, rdbtnGenerateAsPng.isSelected());
-					compositionScreen.getTextEditor().setText(output);
+					compositionScreen.getTextEditor().setText("["+ DateTime.getCurrentTime() +"] " + output);
 					openDirectory(directory);
 				}
-				dispose();
 			}
 		});
 		btnNewButton.setBounds(295, 209, 117, 25);
 		contentPane.add(btnNewButton);
+		
 	}
 	
 	private void openDirectory(String directory) {

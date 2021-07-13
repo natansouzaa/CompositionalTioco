@@ -17,6 +17,7 @@ import br.edu.ufcg.symbolrt.base.TIOSTS;
 import br.edu.ufcg.symbolrt.compositions.HidingOperator;
 import br.edu.ufcg.symbolrt.compositions.exceptions.IncompatibleCompositionalOperationException;
 import gui.screens.CompositionScreen;
+import gui.util.DateTime;
 
 public class GenerateHidingOperator extends JFrame {
 
@@ -87,8 +88,8 @@ public class GenerateHidingOperator extends JFrame {
 					dispose();
 					return;
 				}
-				compositionScreen.getTextEditor().setText("Operator performed successfully");
 				compositionScreen.addTIOSTS(newName, model);
+				compositionScreen.getTextEditor().setText("["+ DateTime.getCurrentTime() +"] " + "Hiding operator performed successfully");
 				dispose();
 			}
 		});
